@@ -39,7 +39,7 @@ import {HttpClient, HttpParams} from "@angular/common/http";
     }
   `]
 })
-export class PredictAreaStackComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PredictAreaStackComponent implements AfterViewInit, OnDestroy {
   options: any = {};
   themeSubscription: any;
   data: any;
@@ -48,11 +48,6 @@ export class PredictAreaStackComponent implements OnInit, AfterViewInit, OnDestr
   isLoading: boolean = false;
 
   constructor(private theme: NbThemeService, private http: HttpClient) {
-  }
-
-  ngOnInit() {
-    // No longer making the HTTP request immediately
-    // Instead, it will be triggered by the button
   }
 
   ngAfterViewInit() {
