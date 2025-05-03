@@ -173,7 +173,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
       {
         title: 'My Charts',
         link: '/pages/charts/echarts',
-      }
+      },
     ],
   },
   // {

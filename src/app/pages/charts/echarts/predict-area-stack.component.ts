@@ -3,34 +3,81 @@ import { NbThemeService } from '@nebular/theme';
 import {HttpClient, HttpParams} from "@angular/common/http";
 
 @Component({
-  selector: 'ngx-echarts-area-stack',
+  selector: 'ngx-predict-area-stack',
   template: `
-    <div echarts [options]="options" class="echart"></div>
+    <div class="control-panel">
+      <button nbButton status="primary" (click)="fetchAndShowData()" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Show Prediction</span>
+        <span *ngIf="isLoading">
+          <nb-spinner size="tiny" status="info"></nb-spinner> Loading...
+        </span>
+      </button>
+    </div>
+    <div *ngIf="isLoading" class="loading-container">
+      <nb-spinner></nb-spinner>
+      <p>Loading prediction data...</p>
+    </div>
+    <div *ngIf="showChart && !isLoading" echarts [options]="options" class="echart"></div>
   `,
+  styles: [`
+    .control-panel {
+      margin-bottom: 16px;
+    }
+    .echart {
+      margin-top: 16px;
+    }
+    .loading-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+    }
+    .loading-container p {
+      margin-top: 1rem;
+    }
+  `]
 })
-export class EchartsAreaStackComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PredictAreaStackComponent implements OnInit, AfterViewInit, OnDestroy {
   options: any = {};
   themeSubscription: any;
   data: any;
   themeConfig: any;
+  showChart: boolean = false;
+  isLoading: boolean = false;
 
   constructor(private theme: NbThemeService, private http: HttpClient) {
   }
 
   ngOnInit() {
-    // Make HTTP request when component initializes
-    this.getData();
+    // No longer making the HTTP request immediately
+    // Instead, it will be triggered by the button
   }
 
   ngAfterViewInit() {
     this.themeSubscription = this.theme.getJsTheme().subscribe(config => {
       this.themeConfig = config;
-      this.updateChartOptions();
+      // Only update the chart if we have data
+      if (this.data) {
+        this.updateChartOptions();
+      }
     });
   }
 
   ngOnDestroy(): void {
-    this.themeSubscription.unsubscribe();
+    if (this.themeSubscription) {
+      this.themeSubscription.unsubscribe();
+    }
+  }
+
+  fetchAndShowData() {
+    // Set loading state
+    this.isLoading = true;
+    this.showChart = false;
+
+    // Get data
+    this.getData();
   }
 
   updateChartOptions() {
@@ -170,16 +217,23 @@ export class EchartsAreaStackComponent implements OnInit, AfterViewInit, OnDestr
       .set('day', '02/05/2025');
 
     // Make the HTTP request with the parameters
-    this.http.get('http://127.0.0.1:5000/power-load', { params })
+    this.http.get('http://127.0.0.1:5000/predict', { params })
       .subscribe(
         (response) => {
           this.data = response;
           console.log('Data received:', this.data);
           // Now that we have data, update the chart
           this.updateChartOptions();
+          // Show the chart and hide loading indicator
+          this.showChart = true;
+          this.isLoading = false;
         },
         (error) => {
           console.error('Error fetching data:', error);
+          // Handle error state
+          this.showChart = false;
+          this.isLoading = false;
+          // You could also add an error message here
         },
       );
   }

@@ -26,6 +26,9 @@ import { EchartsMultipleXaxisComponent } from './echarts/echarts-multiple-xaxis.
 import { EchartsAreaStackComponent } from './echarts/echarts-area-stack.component';
 import { EchartsBarAnimationComponent } from './echarts/echarts-bar-animation.component';
 import { EchartsRadarComponent } from './echarts/echarts-radar.component';
+import {HumidityLineComponent} from './echarts/humidity-line.component';
+import {TemperatureLineComponent} from "./echarts/temperature-line.component";
+import {PredictAreaStackComponent} from "./echarts/predict-area-stack.component";
 
 const components = [
   ChartjsBarComponent,
@@ -41,6 +44,9 @@ const components = [
   D3PolarComponent,
   D3AdvancedPieComponent,
   EchartsLineComponent,
+  HumidityLineComponent,
+  TemperatureLineComponent,
+  PredictAreaStackComponent,
   EchartsPieComponent,
   EchartsBarComponent,
   EchartsMultipleXaxisComponent,
